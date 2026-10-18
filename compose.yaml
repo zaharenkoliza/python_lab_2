@@ -1,0 +1,20 @@
+# Один сервис: шлюз Hermes Agent (Telegram)
+services:
+  hermes-agent:
+    # официальный образ Nous Research; после первого успешного запуска закрепить версию (тег) для воспроизводимости (T4)
+    image: nousresearch/hermes-agent:latest
+    container_name: hermes_agent
+    # поднимается сам после сбоя и перезагрузки сервера (доказательство автономности в P1)
+    restart: unless-stopped
+    # рабочий режим шлюза сообщений
+    command: gateway run
+    volumes:
+      # ВАЖНО: правая часть строго /opt/data (не /opt/hermes), иначе "0 total bundled"
+      - ${HERMES_HOME:-/home/agent/.hermes}:/opt/data
+    # ограничение ресурсов и ротация логов (шаг "сохранение логов")
+    mem_limit: 1g
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
