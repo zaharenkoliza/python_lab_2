@@ -48,3 +48,26 @@ Docker Engine через get.docker.com, Compose v5.6.1. Проверка `docke
 - `[Telegram] Connected to Telegram (polling mode)`.
 - `Telegram polling confirmed healthy: getUpdates progressing`.
 - Предупреждения «No messaging platforms enabled» нет.
+
+## 6. Память (шаг 12)
+`USER.md` и `MEMORY.md` лежат в `~/.hermes/memories/`. В `MEMORY.md` записана контрольная фраза проекта «янтарный сурок 7421», которой нет нигде в промпте или тексте вопроса. Прямой вопрос через `hermes chat -q` на первой проверке дал ответ с подхватом данных из файлов (язык ответов, ключевое слово из MEMORY.md). Проверка уникальной фразой через Telegram: **[заполнить после ответа бота]**.
+
+## 7. Навык и расписание (шаги 14–15)
+Навык `arxiv-digest` лежит в `~/.hermes/skills/research/arxiv-digest/SKILL.md` и виден агенту: `hermes skills list` показывает `arxiv-digest | research | local | enabled`. Исходный текст: [skills/arxiv-digest/SKILL.md](../skills/arxiv-digest/SKILL.md).
+
+Задача планировщика: `hermes cron create "every 5m" … --name arxiv-digest --skill arxiv-digest --deliver telegram --repeat 3`. Результат доставляется в Telegram. Все три запуска произошли по расписанию, без ручного вмешательства (ручной запуск был один, он упал с 429 и в зачёт не идёт).
+
+| Прогон | Старт (UTC) | Длительность, с | prompt-токены | completion-токены | Всего токенов | Результат |
+|---|---|---|---|---|---|---|
+| 1 | 14:51:33 | 112,3 | 114 261 | 8 099 | 122 360 | дайджест доставлен |
+| 2 | 14:58:33 | 112,8 | 99 145 | 9 537 | 108 682 | дайджест доставлен (10 работ) |
+| 3 | 15:05:35 | 283,0 | 390 732 | 20 788 | 411 520 | дайджест доставлен |
+| (ручной) | 14:45:25 | 11,6 | — | — | — | 429, ошибка |
+
+Условия замера: модель `google/gemma-4-31b-it:free`, провайдер OpenRouter, ВМ Lima 2 vCPU / 2 ГиБ, данные — журнал `usage_audit.jsonl` ([logs/cron/usage_audit.jsonl](logs/cron/usage_audit.jsonl)). Тексты дайджестов: [logs/cron/](logs/cron/). Скриншоты: [img/cron-run1-digest.png](img/cron-run1-digest.png), [img/cron-run2-digest.png](img/cron-run2-digest.png), [img/cron-run2-digest-end.png](img/cron-run2-digest-end.png).
+
+Наблюдения:
+- Расход токенов нестабилен: третий прогон израсходовал в 3,4 раза больше второго при том же промпте. Из трёх замеров причину установить нельзя (вероятно, лишние шаги и повторные обращения к API).
+- Стоимость фактическая нулевая, модель бесплатная.
+- В прогоне 1 есть иероглифы в русском тексте, см. [debug-log.md](debug-log.md), запись 3.
+- Ссылки в дайджесте имеют вид `arxiv.org/abs/<id>`; в тексте навыка требуется брать их только из ответа API.
