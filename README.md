@@ -17,11 +17,10 @@
 ## Безопасность
 Доступ к боту = доступ к серверу. Только свой id в `TELEGRAM_ALLOWED_USERS`, `GATEWAY_ALLOW_ALL_USERS` не включать, не запускать от root, ключи не коммитить (`.gitignore`).
 
-## Отчёт и доказательства
-- Отчёт по «Ходу работы» и P1: [docs/P1-deployment-report.md](docs/P1-deployment-report.md)
-- Журнал отладки: [docs/debug-log.md](docs/debug-log.md)
-- Чек-лист доказательств: [docs/p1-evidence.md](docs/p1-evidence.md)
-- Логи старта и прогонов cron: [docs/logs/](docs/logs/), скриншоты: [docs/img/](docs/img/)
+## Отчёт и материалы
+- Отчёт по разделу «Ход работы» и P1: [docs/P1-deployment-report.md](docs/P1-deployment-report.md)
 - Сравнение платформ (T1): [docs/T1-platform-comparison.md](docs/T1-platform-comparison.md)
+- Журнал отладки: [docs/debug-log.md](docs/debug-log.md)
+- Журналы старта и cron: [docs/logs/](docs/logs/); скриншоты: [docs/img/](docs/img/)
 
-Реально использованная конфигурация: каталог `~/.hermes` монтируется в `/opt/data`, переменные `OPENROUTER_API_KEY`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_ALLOWED_USERS` лежат в `~/.hermes/.env` (вне репозитория), навыки — в `~/.hermes/skills/`, память — в `~/.hermes/memories/`.
+Фактический запуск выполнен на локальной виртуальной машине (Lima, Ubuntu 24.04). Скрипты `scripts/01-harden-server.sh` и `scripts/03-setup-agent.sh` рассчитаны на арендованный VPS; порядок действий для виртуальной машины описан в отчёте, раздел 6. Секреты (`OPENROUTER_API_KEY`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_ALLOWED_USERS`) хранятся в `~/.hermes/.env` вне репозитория, навыки лежат в `~/.hermes/skills/`, память в `~/.hermes/memories/`.

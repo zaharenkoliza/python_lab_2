@@ -1,3 +1,16 @@
+---
+name: arxiv-digest
+description: "Дайджест новых публикаций arXiv по темам из MEMORY.md. Использовать, когда просят дайджест публикаций, статей или препринтов, «что нового в arXiv», а также по расписанию."
+version: 1.0.0
+author: Diana Savelyeva
+license: MIT
+platforms: [linux, macos]
+metadata:
+  hermes:
+    tags: [Research, Arxiv, Digest, Monitoring]
+    related_skills: [arxiv]
+---
+
 # Навык: дайджест новых публикаций arXiv
 
 ## Когда включать
